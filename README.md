@@ -1,2 +1,3 @@
-# Th-c-h-nh-c-s-d-li-u
+# Thực hành cơ sở dữ liệu
+
 IT3290

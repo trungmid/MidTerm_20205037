@@ -1,68 +1,77 @@
--- 1. rename the table countries to country_new
-ALTER TABLE countries RENAME country_new
+-- 1. Đổi tên bảng countries  thành country_new
+ALTER TABLE countries 
+RENAME TO country_new
 
--- 2. add a column region_id to the table locations
-ALTER TABLE locations
-ADD region_id INT;
 
--- 3. add a columns ID as the first column of the table locations
+-- 2. Thêm cột region_id tới bảng locations
 ALTER TABLE locations
-ADD ID INT FIRST;
+ADD COLUMN region_id INT;
 
--- 4. add a column region_id after state_province to the table locations
+-- 3. thêm cột id vào bản locatión với điều kiện cột ID là cột đầu tiên của bảng
 ALTER TABLE locations
-ADD region_id INT
-AFTER state_province
+ADD COLUMN ID INT FIRST;
 
--- 5. change the data type of the column country_id to integer in the table locations
-ALTER TABLE locations
-MODIFY country_id INT;
 
--- 6. drop the columnn city from the table locations
+-- 4. Thêm cột region_id đứng liền sau cột state_province của bảng location
 ALTER TABLE locations
-DROP city;
+ADD COLUMN region_id INT
+AFTER state_province;
 
--- 7. change the name of the column state_province to state, keeping the data type and size same.
+-- 5. Thay đổi kiểu dữ liệu của cột country_id thành integer trong bảng locations
 ALTER TABLE locations
-DROP state_province,
-ADD state varchar(25)
+ALTER COLUMN country_id TYPE integer;
+
+-- 6. Xóa cột city trong bảng locations
+ALTER TABLE locations
+DROP COLUMN city;
+
+-- 7 đổi tên cột state_province thành cột state, giữ nguyên kiểu và kích thước của cột
+ALTER TABLE locations
+DROP COLUMN state_province,
+ADD COLUMN state varchar(25)
 ALTER city
 
 ALTER TABLE locations 
 CHANGE state_province state varchar(25);
 
--- 8. add a primary key for the columns location_id in the locations table.
+
+-- 8. thêm cột khóa chính cho cột location_id trong bảng location
 ALTER TABLE locations
-ADD PRIMARY KEY(location_id)
+ADD PRIMARY KEY(location_id);
 
--- 9. add a primary key for a combination of columns location_id and country_id
+
+-- 9. thêm khóa chính là 2 cặp cột location_id , country_id  cho bảng locations
 ALTER TABLE locations
-ADD PRIMARY KEY(location_id, country_id)
+ADD PRIMARY KEY(location_id, country_id);
 
--- 10. drop the existing primary from the table locations on a combination of columns location_id and country_id.
-ALTER TABLE locations DROP PRIMARY KEY;
+-- 10 . Xóa khóa chính là cặp (location_id , country_id) đã tạo
+ALTER TABLE locations DROP CONSTRAINT PRIMARY KEY;
 
--- 11. add a foreign key on job_id column of job_history table referencing to the primary key job_id of jobs table
+--11.Tạo khóa ngoại job_id cho bảng job_history mà tham chiếu tới job_id của bảng jobs
 ALTER TABLE job_history
 ADD FOREIGN KEY(job_id)
 REFERENCES jobs(job_id)
 
--- 12. add a foreign key constraint named fk_job_id on job_id column of job_history table referencing to the primary key job_id of jobs table.
+
+-- 12. tạo ràng buộc có tên là fk_job_id trong bảng job_history đã tạo
 ALTER TABLE job_history
-ADD CONSTRAINT fk_job_id 
+CONSTRAINT fk_job_id 
 FOREIGN KEY (job_id) 
 REFERENCES jobs(job_id) 
 ON UPDATE RESTRICT
 ON DELETE CASCADE;
 
--- 13. drop the existing foreign key fk_job_id from job_history table on job_id column which is referencing to the job_id of jobs table.
-ALTER TABLE job_history
-DROP FOREIGN KEY fk_job_id;
 
--- 14. add an index named indx_job_id on job_id column in the table job_history
+-- 13. xóa kkhóa ngoại fk_job_id trong bảng job_histỏry đã tạo
+ALTER TABLE job_history
+DROP CONSTRAINT fk_job_id;
+
+
+-- 14. thêm chỉ mục có tên indx_job_id trên cột job_id của bảng job_history
 ALTER TABLE job_history
 ADD INDEX indx_job_id(job_id);
 
--- 15. drop the index indx_job_id from job_history table.
+
+-- 15 . xóa chỉ mục indx_job_id trong bảng job_history
 ALTER TABLE job_history
 DROP INDEX indx_job_id;

@@ -1,0 +1,121 @@
+create database employees;
+use employees;
+
+
+drop table if exists nhanVien, 
+                     phongBan, 
+                     diaDiem_PHG,
+                     thanNhan,
+                     deAn, 
+                     phanCong
+cascade; 
+
+
+create table if not exists nhanVien(
+    hoNV varchar(50), 
+    tenLot varchar(50),
+    ten varchar(50),
+    maNV int primary key, 
+    ngSinh date not null, 
+    diaChi varchar,
+    phai varchar(10), 
+    luong int (check luong > 0)
+    ma_NQL varchar(10),
+    phg int, 
+    unique(maNV),
+    foreign key (ma_NQL) references phongBan(TRPHG) on delete cascade,
+    foreign key(phg) references diaDiem_PHG(maPHG) on delete cascade
+);
+
+create table if not exists phongBan(    
+    tenPHG varchar(15),
+    maPH int  primary key, 
+    TRPHG varchar(10),
+    ng_NhanChuc date  
+);
+
+
+create table if not exists diaDiem_PHG(
+    maPHG int primary key, 
+    diaDiem varchar(50)
+);
+
+
+create table if not exists thanNhan(
+    maNV int primary key, 
+    tenTN varchar(50), 
+    phai varchar(5),
+    ngaySinh date not null,
+    quanHe varchar(20), 
+    foreign key (maNV) references nhanVien(maNV) on delete cascade
+);
+
+
+create table if not exists deAn(
+    tenDA varchar(50),
+    maDeAn int primary key, 
+    dDiem_DA varchar, 
+    phong int
+);
+
+create table if not exists phanCong(
+    maNV int primary key, 
+    soDA int check (soDA > 0),
+    thoiGian numeric(5, 2), 
+    foreign key (maNV) references nhanVien(maNV) on delete cascade
+);
+
+
+insert into 
+      nhanVien(hoNV, tenLot, ten, maNV, ngaySinh, diaChi, phai, luong, ma_NQL, maPHG)
+values
+     ('dinh', 'ba', 'tien', 123456789, '09/01/1995', '731 tran hung dao, q1, tphcm', 'nam', 300000, 333444555, 5),
+     (''nguyen'', 'thanh', 'trung', 333445555, '08/12/1945','638 nguyen van cu, q5 tphcm ', 'nam', 40000, 88866555, 5 );
+
+
+insert into 
+       phongBan(tenPHG, maPH, TRPHG, ng_NhanChuc)
+values  
+      ('nghien cuu', 5, 333445555, '22/08/1978'),
+      ('dieu hanh', 4,987987987, '01/05/1985'),
+      ('quan ky ', 1, 888665555, '19/06/1971');
+
+insert into 
+     diaDiem_PHG(maPHG, diaDiem)
+values   
+     (1, 'tphcm'),
+     (4, 'ha noi'), 
+     (5, 'vung tau'),
+     (5, 'nha trang'),
+     (5, 'tp hcm');
+
+
+insert into 
+     thanNhan(maNV, tenTN, phai, ngaySinh, quanHe)
+values 
+     (333445555, 'quang', 'nu', '05/04/1976', 'con Gai'),
+     (333445555, 'khang', 'nam', '25/10/1973', 'con trai'),
+     (333445555, 'duong', 'nu', '03/05/1945', ' con trai'), 
+     (987654321, 'dang', 'nam', '16/02/1932', 'vo chong');
+
+
+insert into deAn(tenDA, maDeAn, dDiem_DA, phong)
+values
+    ('san pham x', 1, 'vung tau', 5),
+    ('san pham y ',2, 'nha trang', 5),
+    ('san pham z', 3, 'to hcm', 5);
+
+
+insert into 
+     phanCong(maNV, soDA, thoiGian)
+values
+    (123456789,1, 32.5),
+    (123456789, 2, 7.5),
+    (6668884444, 3, 40.0),
+    (453453453, 1, 20.0),
+    (453453453, 2, , 20.0),
+    (999887777, 30, 30.0);
+
+    
+                         
+        

@@ -1,0 +1,89 @@
+-- create [or replace] procedure procedure_name(paramater_list)
+-- language plpgsql -- as the procedure, note such c, sql
+
+-- as $$
+-- declare
+--   ---variable declare
+-- begin 
+--  -- stored procedure
+--  end; $$
+
+
+---------
+-- procedure
+--#1 : employees(code, name, entered date, supervisor id, supervisor name)
+create or replace procedure employees_information()
+language plpgsql
+as $$
+begin 
+ select e.manv, e.ho || ' ' || e.tenLot ' '|| e.ten as hoVaTen, 
+        pb.ng_NhanChuc, pb.maPH, pb.tenPHG
+ from nhanVien e, phongBan pb 
+ where e.phg = pb.maPH
+ end;
+
+
+ -- #2: employees(code, name, salary) whose salary more than average
+
+
+ create or replace procedure list_sal_more_avg()
+ language plpgsql
+ as $$
+ begin 
+    select maNV, ho || ' ' || tenLot ' '|| ten as ten,
+           salary
+    from nhanVien
+    where salary > avg(salary);
+end;
+
+
+-- #3: list n employees that have the highest salary. N is the input par
+create or replace procedure n_highest_sal(
+     nth_employees integer
+)
+language plpgsql
+as $$
+begin 
+  select *
+  from nhanVien
+  order by salary 
+  limit nth_employees;
+end;
+
+
+
+-- #4: increase 10%sal in the city a
+create or replace procedure increa_sal_local(
+    par_diaChi varchar
+)
+language plpgsql
+as $$
+begin 
+   update nhanVien
+   set salary = salary * 1.1
+   where diaChi = '%%s%', par_diaChi;
+end;
+
+-------------------------------------------------
+-- trigger
+-- note take any arg and  return value with trigger
+
+-- create function trigger_function()
+--     returns trigger
+--     language plpgsql
+-- as $$ 
+-- begin 
+--    -- trigger logic
+-- end;
+-- $$
+
+
+-- #1: salary of department < 50000
+create or replace function sal_depart()
+   returns trigger
+   language plpgsql
+   as
+$$ 
+   begin 
+      select phg, sum(salary)/count(*) as sal_avg_depart
+      from 

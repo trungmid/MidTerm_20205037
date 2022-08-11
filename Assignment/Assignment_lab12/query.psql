@@ -1,0 +1,93 @@
+-- #danh sach khach hang o 1 quoc gia bat ki 
+create index idx_country
+on Customers(country);
+
+select id_customer, lastname|| ' ' || firstname
+from Customers
+where country = 'canada';
+
+
+-- explain 
+-- select id_customer, lastname|| ' ' || firstname
+-- from Customers
+-- where country = 'canada';
+
+-- #2
+do $$
+declare threshHold integer;
+begin 
+   select 100000 into threshHold;
+   drop index idx_totalAmount;
+   create index idx_totalAmount on Orders(totalAmount)
+   drop table if exists tmp_table;
+   create table tmp_table as
+   select * from Orders
+   where totalAmount > threshHold;
+end $$;
+
+select id_order
+from tmp_table;
+
+
+--#3
+do $$
+declare threshHold2 integer;
+begin 
+   select 1000000 into threshHold;
+   drop index idx_totalAmount;
+   create index idx_totalAmount on Orders(totalAmount)
+   drop table if exists tmp_table;
+   create table tmp_table as
+   select id_customer, lastname, firstname, c1.totalAmount
+   from Customers c
+         inner join Orders o 
+         on c.id_customer = o.id_customer 
+    where totalAmount > threshHold2;
+end $$;
+
+select id_customer, firstname|| ' '|| lastname, totalAmount
+from tmp_table;
+
+
+
+-- #4 
+create index idx_id_prod on Orderslines(prod_id);
+select p.id_prod as 'id', p.title, quantity
+from Orderslines o 
+    inner join Products p 
+    on o.prod_id = p.id_prod
+order by Orderslinedate;
+
+
+
+-- #5
+create index idx_cusId on Customers(id_customer);
+select id_customer, firstname || ' ' || lastname
+from 
+   Customers c
+full outer join Orders o on o.Customerid = c.id_customer
+where id_order is not null;
+
+
+-- #6 
+select id_prod, title
+from Products
+where id_prod not in (select prod_id from Orderslines);
+
+-- #7
+select id_customer, firstname|| ' ' || lastname as name, sum(totalAmount)
+from Customers c
+   inner join Orders o on o.Customerid = c.id_customer
+order by totalAmount;
+
+-- #8
+select sum(quantity)
+from Orderslines o  
+    inner join order od on o.id_order  = od.id_order;
+   
+
+
+
+
+
+

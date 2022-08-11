@@ -1,0 +1,5 @@
+select id_customer, firstname|| ' ' || lastname as name
+from Customers c 
+   inner join Orders o on o.Customerid  = c.id_customer
+order by lastname;
+

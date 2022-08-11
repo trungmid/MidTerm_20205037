@@ -1,0 +1,61 @@
+
+-- #1
+
+drop view if exists v_product cascade;
+create or replace view v_product
+as
+select p.*, c.category_name, p.brand_name
+from products p
+     inner join categories c using (category_id)
+     inner join brands b using(brand_id);
+
+select *
+from v_product;
+-- #2
+
+select * 
+from v_product 
+where model_year = 2022
+
+-- #3
+alter view if exists v_product alter list_price set default list_price > 100000;
+
+-- #4
+create index idx_product_name 
+on products(product_name);
+explain select product_name
+        from products
+        whewe product_name  = 'Electra Moto 1 - 2016'
+drop index idx_product_name;
+
+
+create unique index idx_product_name
+on products(product_name);
+explain select product_name
+        from products
+        whewe product_name  = 'Electra Moto 1 - 2016'
+
+
+----------------------------------------------
+-- #c
+-- #1
+begin;
+ 
+ select product_name
+ from products
+ where category_id = 6;
+savepoint sp01;
+ commit;
+-- savepoint sp1;
+-- #3
+begin;
+update products
+set list_price = list_price + 10000
+where product_name = 'Electra Moto 1 - 2016'
+savepoint sp02;
+rollback to savepoint sp02;
+commit;
+
+   
+
+
